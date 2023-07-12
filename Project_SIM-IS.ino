@@ -66,21 +66,51 @@ void loop() {
   check_deactivation_mode_button();
   check_door_and_window_sensor();
   check_motion_sensor();
+  //  check_inbox();
 
 }
 
 void check_door_and_window_sensor() {
   int  door_touch = digitalRead(touch_sensor_1);
   if (door_touch == 1) {
+    Serial.println("door and/or window was touched!!!");
     digitalWrite(siren_pin, LOW);
+    //    send_text("Someone is trying to open the door. Text me the passcode to deactivate.")
   }
 }
 void check_motion_sensor() {
   burglar = digitalRead(motion_sensor);
   if (burglar == 1) {
+    Serial.println("The has been motion detected inside the house!!! Activating camera for 5 seconds");
+    //    send_text("someone is inside. Text me the passcode to deactivate.");
     digitalWrite(camera_pin, LOW);
+    delay(5000);
+    digitalWrite(camera_pin, HIGH);
+    
   }
 }
+
+void check_inbox() {
+  //  if received text containing the passcode, deactivate and execute below,
+  /*
+        my_lcd(0, 0, "Deactivated.", 2000);
+        clear_all();
+        lcd.clear();
+        delay(2000);
+        resetFunc();
+  */
+  // else, 
+  /*
+   * send_text("Wrong passcode. Try again.")
+   */
+}
+
+void send_text() {
+  // this is activated when door is touched.
+  // this is activated when person is inside and motion is detected.
+  // make this function accept parameter "String my_message"
+}
+
 
 void my_lcd(int my_row, int my_column, String message, int my_duration) {
   lcd.setCursor(my_row, my_column);
@@ -172,11 +202,11 @@ void set_sim()
 void check_deactivation_mode_button() {
   customKey = customKeypad.getKey();
   if (customKey == 'D') {
-    //    Serial.println("D was pressed");
+    Serial.println("D was pressed");
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Enter passcode:");
-
+    delay(3000);
     while (data_count < (Password_Lenght - 1)) {
 
       customKey = customKeypad.getKey();
